@@ -1,0 +1,264 @@
+"use client";
+
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { Check, KeyRound, RefreshCw, Trash2, UploadCloud, X } from "lucide-react";
+import { Footer, SiteNav } from "@/components/SiteNav";
+import { isFirebaseConfigured } from "@/lib/firebase";
+import {
+  deleteOrder,
+  getPaymentSettings,
+  listOrders,
+  Order,
+  OrderStatus,
+  saveQrCode,
+  saveUpiId,
+  updateOrder,
+} from "@/lib/orders";
+import { getPlanLabel } from "@/lib/plans";
+
+const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? "change-this-password";
+
+export default function AdminPage() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [password, setPassword] = useState("");
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [search, setSearch] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [qrFile, setQrFile] = useState<File | null>(null);
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [upiId, setUpiId] = useState("");
+
+  const filteredOrders = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    if (!term) return orders;
+    return orders.filter((order) => order.whatsappNumber.toLowerCase().includes(term));
+  }, [orders, search]);
+
+  useEffect(() => {
+    if (!loggedIn || !isFirebaseConfigured) return;
+    refreshOrders();
+    getPaymentSettings()
+      .then((settings) => {
+        setQrCodeUrl(settings.qrCodeUrl ?? "");
+        setUpiId(settings.upiId ?? "");
+      })
+      .catch(() => undefined);
+  }, [loggedIn]);
+
+  function handleLogin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (password === adminPassword) {
+      setLoggedIn(true);
+      setMessage("");
+    } else {
+      setMessage("Incorrect admin password.");
+    }
+  }
+
+  async function refreshOrders() {
+    setLoading(true);
+    try {
+      setOrders(await listOrders());
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not load orders.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function saveOrder(order: Order, updates: Partial<Order>) {
+    setMessage("");
+    try {
+      await updateOrder(order.id, updates);
+      setOrders((current) => current.map((item) => (item.id === order.id ? { ...item, ...updates } : item)));
+      setMessage("Order updated.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not update order.");
+    }
+  }
+
+  async function removeOrder(order: Order) {
+    if (!confirm(`Delete order for ${order.customerName}?`)) return;
+    try {
+      await deleteOrder(order.id);
+      setOrders((current) => current.filter((item) => item.id !== order.id));
+      setMessage("Order deleted.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not delete order.");
+    }
+  }
+
+  async function handleQrUpload(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoading(true);
+    try {
+      const url = qrFile ? await saveQrCode(qrFile) : qrCodeUrl;
+      await saveUpiId(upiId);
+      setQrCodeUrl(url);
+      setMessage("Payment settings saved.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not save payment settings.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (!loggedIn) {
+    return (
+      <main className="shell">
+        <SiteNav />
+        <section className="section page-title">
+          <h1>Admin Login</h1>
+          <p className="muted">Password protected dashboard for payment approvals.</p>
+        </section>
+        <section className="section">
+          <form className="form-card" onSubmit={handleLogin}>
+            <div className="field">
+              <label htmlFor="password">Admin Password</label>
+              <input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Enter admin password"
+              />
+            </div>
+            <button className="button" type="submit">
+              Login
+            </button>
+            {message && <p className="notice">{message}</p>}
+          </form>
+        </section>
+        <Footer />
+      </main>
+    );
+  }
+
+  return (
+    <main className="shell">
+      <SiteNav />
+      <section className="section page-title">
+        <h1>Admin Dashboard</h1>
+        <p className="muted">Approve payments, add keys, manage APK links, and maintain payment QR.</p>
+      </section>
+      <section className="section">
+        {!isFirebaseConfigured && <p className="notice">Firebase env values are required before admin actions can work.</p>}
+        <div className="admin-row">
+          <form className="form-card" onSubmit={handleQrUpload}>
+            <h2>Payment Settings</h2>
+            <div className="field">
+              <label htmlFor="upiId">UPI ID</label>
+              <input id="upiId" value={upiId} onChange={(event) => setUpiId(event.target.value)} placeholder="yourupi@bank" />
+            </div>
+            <div className="field">
+              <label htmlFor="qr">QR Code Image Upload</label>
+              <input id="qr" type="file" accept="image/*" onChange={(event) => setQrFile(event.target.files?.[0] ?? null)} />
+            </div>
+            <button className="button" type="submit" disabled={loading || !isFirebaseConfigured}>
+              <UploadCloud size={18} />
+              Save QR
+            </button>
+            {qrCodeUrl && (
+              <div className="qr-box" style={{ marginTop: 14, minHeight: 180 }}>
+                <img src={qrCodeUrl} alt="Current UPI QR" />
+              </div>
+            )}
+          </form>
+          <div className="form-card">
+            <h2>Search</h2>
+            <div className="field">
+              <label htmlFor="search">Customer Phone Number</label>
+              <input id="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search phone" />
+            </div>
+            <button className="button secondary" type="button" onClick={refreshOrders} disabled={loading || !isFirebaseConfigured}>
+              <RefreshCw size={18} />
+              Refresh
+            </button>
+            {message && <p className="notice">{message}</p>}
+          </div>
+        </div>
+
+        <div className="orders" style={{ marginTop: 22 }}>
+          {filteredOrders.map((order) => (
+            <OrderEditor key={order.id} order={order} onSave={saveOrder} onDelete={removeOrder} />
+          ))}
+          {!filteredOrders.length && <p className="notice">{loading ? "Loading orders..." : "No orders found."}</p>}
+        </div>
+      </section>
+      <Footer />
+    </main>
+  );
+}
+
+function OrderEditor({
+  order,
+  onSave,
+  onDelete,
+}: {
+  order: Order;
+  onSave: (order: Order, updates: Partial<Order>) => Promise<void>;
+  onDelete: (order: Order) => Promise<void>;
+}) {
+  const [draft, setDraft] = useState(order);
+  const statuses: OrderStatus[] = ["Pending", "Approved", "Rejected"];
+
+  useEffect(() => setDraft(order), [order]);
+
+  return (
+    <article className="order-card">
+      <div className="section-head">
+        <div>
+          <h2>{draft.customerName}</h2>
+          <p className="muted">{draft.whatsappNumber}</p>
+        </div>
+        <span className={`status-pill status-${draft.status}`}>{draft.status}</span>
+      </div>
+      <p>
+        <strong>Plan:</strong> {getPlanLabel(draft.plan)}
+      </p>
+      <p>
+        <a className="screenshot-link" href={draft.paymentScreenshot} target="_blank" rel="noreferrer">
+          View payment screenshot
+        </a>
+      </p>
+      <div className="grid two">
+        <div className="field">
+          <label>Status</label>
+          <select value={draft.status} onChange={(event) => setDraft({ ...draft, status: event.target.value as OrderStatus })}>
+            {statuses.map((status) => (
+              <option key={status}>{status}</option>
+            ))}
+          </select>
+        </div>
+        <div className="field">
+          <label>Activation Key</label>
+          <input value={draft.activationKey} onChange={(event) => setDraft({ ...draft, activationKey: event.target.value })} />
+        </div>
+      </div>
+      <div className="field">
+        <label>APK Download Link</label>
+        <input value={draft.apkDownloadLink} onChange={(event) => setDraft({ ...draft, apkDownloadLink: event.target.value })} />
+      </div>
+      <div className="admin-actions">
+        <button className="button" type="button" onClick={() => onSave(order, draft)}>
+          <KeyRound size={18} />
+          Save
+        </button>
+        <button className="button secondary" type="button" onClick={() => onSave(order, { status: "Approved" })}>
+          <Check size={18} />
+          Approve
+        </button>
+        <button className="button secondary" type="button" onClick={() => onSave(order, { status: "Rejected" })}>
+          <X size={18} />
+          Reject
+        </button>
+        <button className="button danger" type="button" onClick={() => onDelete(order)}>
+          <Trash2 size={18} />
+          Delete
+        </button>
+      </div>
+    </article>
+  );
+}
