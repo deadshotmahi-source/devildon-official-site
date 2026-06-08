@@ -9,11 +9,11 @@ export const plans = [
   { id: "safe-1d", name: "BGMI SAFE MODE", duration: "1 Day", price: 100, apkDownloadLink: safeApkDownloadLink },
   { id: "safe-7d", name: "BGMI SAFE MODE", duration: "7 Days", price: 400, apkDownloadLink: safeApkDownloadLink },
   { id: "safe-30d", name: "BGMI SAFE MODE", duration: "30 Days", price: 800, apkDownloadLink: safeApkDownloadLink },
-  { id: "brutal-3h", name: "BGMI BRUTAL ADDITION", duration: "3 Hours", price: 50, apkDownloadLink: brutalApkDownloadLink },
-  { id: "brutal-1d", name: "BGMI BRUTAL ADDITION", duration: "1 Day", price: 120, apkDownloadLink: brutalApkDownloadLink },
-  { id: "brutal-7d", name: "BGMI BRUTAL ADDITION", duration: "7 Days", price: 500, apkDownloadLink: brutalApkDownloadLink },
-  { id: "brutal-30d", name: "BGMI BRUTAL ADDITION", duration: "30 Days", price: 1000, apkDownloadLink: brutalApkDownloadLink },
-  { id: "brutal-60d", name: "BGMI BRUTAL ADDITION", duration: "60 Days", price: 1500, apkDownloadLink: brutalApkDownloadLink },
+  { id: "brutal-3h", name: "BGMI BRUTAL MODE", duration: "3 Hours", price: 50, apkDownloadLink: brutalApkDownloadLink },
+  { id: "brutal-1d", name: "BGMI BRUTAL MODE", duration: "1 Day", price: 120, apkDownloadLink: brutalApkDownloadLink },
+  { id: "brutal-7d", name: "BGMI BRUTAL MODE", duration: "7 Days", price: 500, apkDownloadLink: brutalApkDownloadLink },
+  { id: "brutal-30d", name: "BGMI BRUTAL MODE", duration: "30 Days", price: 1000, apkDownloadLink: brutalApkDownloadLink },
+  { id: "brutal-60d", name: "BGMI BRUTAL MODE", duration: "60 Days", price: 1500, apkDownloadLink: brutalApkDownloadLink },
 ] as const;
 
 export const featuredPlans = [
