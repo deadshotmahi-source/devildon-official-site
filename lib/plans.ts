@@ -5,10 +5,10 @@ const brutalApkDownloadLink =
   "https://firebasestorage.googleapis.com/v0/b/devildonofficial.firebasestorage.app/o/apk%2FDevil%20Don%204.4%20150%20M5.apk?alt=media&token=7387d123-bbc3-4e38-a883-0a469f7b80d8";
 
 export const plans = [
-  { id: "safe-3h", name: "BGMI SAFE ADDITION", duration: "3 Hours", price: 50, apkDownloadLink: safeApkDownloadLink },
-  { id: "safe-1d", name: "BGMI SAFE ADDITION", duration: "1 Day", price: 100, apkDownloadLink: safeApkDownloadLink },
-  { id: "safe-7d", name: "BGMI SAFE ADDITION", duration: "7 Days", price: 400, apkDownloadLink: safeApkDownloadLink },
-  { id: "safe-30d", name: "BGMI SAFE ADDITION", duration: "30 Days", price: 800, apkDownloadLink: safeApkDownloadLink },
+  { id: "safe-3h", name: "BGMI SAFE MODE", duration: "3 Hours", price: 50, apkDownloadLink: safeApkDownloadLink },
+  { id: "safe-1d", name: "BGMI SAFE MODE", duration: "1 Day", price: 100, apkDownloadLink: safeApkDownloadLink },
+  { id: "safe-7d", name: "BGMI SAFE MODE", duration: "7 Days", price: 400, apkDownloadLink: safeApkDownloadLink },
+  { id: "safe-30d", name: "BGMI SAFE MODE", duration: "30 Days", price: 800, apkDownloadLink: safeApkDownloadLink },
   { id: "brutal-3h", name: "BGMI BRUTAL ADDITION", duration: "3 Hours", price: 50, apkDownloadLink: brutalApkDownloadLink },
   { id: "brutal-1d", name: "BGMI BRUTAL ADDITION", duration: "1 Day", price: 120, apkDownloadLink: brutalApkDownloadLink },
   { id: "brutal-7d", name: "BGMI BRUTAL ADDITION", duration: "7 Days", price: 500, apkDownloadLink: brutalApkDownloadLink },
