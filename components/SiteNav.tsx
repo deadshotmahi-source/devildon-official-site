@@ -1,21 +1,51 @@
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Crown, Sparkles } from "lucide-react";
 
 export function SiteNav() {
   return (
-    <header className="nav">
-      <div className="nav-inner">
-        <Link className="brand" href="/">
-          <span className="brand-mark">
-            <ShieldCheck size={21} />
+    <header className="sticky top-0 z-50 border-b border-blue-100 bg-white/90 backdrop-blur-md shadow-sm">
+      <div className="nav-inner flex items-center justify-between py-4">
+        <Link
+          className="flex items-center gap-3 transition-transform duration-300 hover:scale-105"
+          href="/"
+        >
+          <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-blue-700 to-cyan-500 text-white shadow-lg">
+            <ShieldCheck size={24} />
           </span>
-          <span>DEVIL DON OFFICIAL</span>
+
+          <div>
+            <h1 className="text-xl font-black tracking-wide text-slate-900">
+              DEVIL DON OFFICIAL
+            </h1>
+            <p className="text-xs font-semibold text-blue-600 flex items-center gap-1">
+              <Sparkles size={12} />
+              Premium BGMI Access
+            </p>
+          </div>
         </Link>
-        <nav className="nav-links" aria-label="Main navigation">
-          <Link href="/">Home</Link>
-          <Link href="/buy">Buy</Link>
-          <Link href="/status">Status</Link>
-          <Link href="/admin">Admin</Link>
+
+        <nav
+          className="flex items-center gap-6 text-sm font-bold text-slate-700"
+          aria-label="Main navigation"
+        >
+          <Link className="transition hover:text-blue-600" href="/">
+            Home
+          </Link>
+
+          <Link className="transition hover:text-blue-600" href="/buy">
+            Buy
+          </Link>
+
+          <Link className="transition hover:text-blue-600" href="/status">
+            Status
+          </Link>
+
+          <Link
+            className="rounded-xl bg-gradient-to-r from-blue-700 to-cyan-500 px-4 py-2 text-white shadow-md transition hover:scale-105"
+            href="/admin"
+          >
+            Admin
+          </Link>
         </nav>
       </div>
     </header>
@@ -24,10 +54,29 @@ export function SiteNav() {
 
 export function Footer() {
   return (
-    <footer className="footer">
-      <div className="nav-inner">
-        <strong>DEVIL DON OFFICIAL</strong>
-        <span>Manual approval, secure keys, APK access after verification.</span>
+    <footer className="mt-20 border-t border-blue-100 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 text-white">
+      <div className="nav-inner flex flex-col items-center justify-between gap-5 py-10 text-center md:flex-row md:text-left">
+        
+        <div>
+          <h2 className="flex items-center gap-2 text-2xl font-black tracking-wide">
+            <Crown className="text-yellow-400" size={24} />
+            DEVIL DON OFFICIAL
+          </h2>
+
+          <p className="mt-2 text-sm text-slate-300">
+            Elite Premium BGMI Access Platform
+          </p>
+        </div>
+
+        <div className="max-w-lg">
+          <p className="text-lg font-extrabold tracking-wide bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+            🔥 Conquer the Battleground with Premium BGMI Access 🔥
+          </p>
+
+          <p className="mt-2 text-sm text-slate-400">
+            Secure activation • Fast approval • Instant APK delivery
+          </p>
+        </div>
       </div>
     </footer>
   );
