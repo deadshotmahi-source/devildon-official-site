@@ -3,13 +3,16 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import type { Transition, Variants } from "framer-motion";
 
-const fadeUp = {
+const MotionNextLink = motion.create(Link);
+
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 28 },
   show: { opacity: 1, y: 0 },
 };
 
-const stagger = {
+const stagger: Variants = {
   hidden: {},
   show: {
     transition: {
@@ -19,7 +22,7 @@ const stagger = {
   },
 };
 
-const smooth = { duration: 0.65, ease: [0.22, 1, 0.36, 1] };
+const smooth: Transition = { duration: 0.65, ease: [0.22, 1, 0.36, 1] };
 
 export function MotionMain({ children, className }: { children: ReactNode; className?: string }) {
   return (
@@ -97,7 +100,7 @@ export function MotionLink({
   href: string;
 }) {
   return (
-    <motion.create(Link)
+    <MotionNextLink
       className={className}
       href={href}
       whileHover={{ scale: 1.045 }}
@@ -105,7 +108,7 @@ export function MotionLink({
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
       {children}
-    </motion.create(Link)>
+    </MotionNextLink>
   );
 }
 
