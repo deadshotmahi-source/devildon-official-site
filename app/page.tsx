@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BadgeCheck, Clock, DownloadCloud, Headphones, LockKeyhole, Zap } from "lucide-react";
 import { Footer, SiteNav } from "@/components/SiteNav";
 import { featuredPlans } from "@/lib/plans";
+import { socialLinks } from "@/lib/socials";
 
 const features = [
   { title: "Secure Key", text: "Activation keys are shared only after admin approval.", icon: LockKeyhole },
@@ -31,6 +32,17 @@ export default function Home() {
                 <BadgeCheck size={18} />
                 Check Status
               </Link>
+            </div>
+            <div className="social-links hero-socials" aria-label="Customer social links">
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <a key={social.label} className="social-link" href={social.href} target="_blank" rel="noreferrer">
+                    <Icon size={18} />
+                    {social.label}
+                  </a>
+                );
+              })}
             </div>
           </div>
           <div className="hero-poster" aria-label="BGMI Devil Don poster">

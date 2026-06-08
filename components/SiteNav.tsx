@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
+import { socialLinks } from "@/lib/socials";
 
 export function SiteNav() {
   return (
@@ -26,8 +27,21 @@ export function Footer() {
   return (
     <footer className="footer">
       <div className="nav-inner">
-        <strong>DEVIL DON OFFICIAL</strong>
-        <span>Manual approval, secure keys, APK access after verification.</span>
+        <div>
+          <strong>DEVIL DON OFFICIAL</strong>
+          <span>Manual approval, secure keys, APK access after verification.</span>
+        </div>
+        <div className="social-links footer-socials" aria-label="Customer social links">
+          {socialLinks.map((social) => {
+            const Icon = social.icon;
+            return (
+              <a key={social.label} className="social-link light" href={social.href} target="_blank" rel="noreferrer">
+                <Icon size={17} />
+                {social.label}
+              </a>
+            );
+          })}
+        </div>
       </div>
     </footer>
   );
