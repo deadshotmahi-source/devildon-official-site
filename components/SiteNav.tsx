@@ -1,25 +1,53 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { ShieldCheck } from "lucide-react";
+import { MotionExternalLink } from "@/components/MotionPrimitives";
 import { socialLinks } from "@/lib/socials";
 
+const navItems = [
+  { href: "/", label: "Home" },
+  { href: "/buy", label: "Buy" },
+  { href: "/status", label: "Status" },
+  { href: "/admin", label: "Admin" },
+];
+
 export function SiteNav() {
+  const pathname = usePathname();
+
   return (
-    <header className="nav">
+    <motion.header
+      className="nav"
+      initial={{ y: -22, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
       <div className="nav-inner">
-        <Link className="brand" href="/">
-          <span className="brand-mark">
-            <ShieldCheck size={21} />
-          </span>
-          <span>DEVIL DON OFFICIAL</span>
-        </Link>
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Link className="brand" href="/">
+            <span className="brand-mark">
+              <ShieldCheck size={21} />
+            </span>
+            <span>DEVIL DON OFFICIAL</span>
+          </Link>
+        </motion.div>
         <nav className="nav-links" aria-label="Main navigation">
-          <Link href="/">Home</Link>
-          <Link href="/buy">Buy</Link>
-          <Link href="/status">Status</Link>
-          <Link href="/admin">Admin</Link>
+          {navItems.map((item) => {
+            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            return (
+              <motion.div key={item.href} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>
+                <Link className={active ? "active" : ""} href={item.href}>
+                  {active && <motion.span className="active-glow" layoutId="nav-active" />}
+                  <span>{item.label}</span>
+                </Link>
+              </motion.div>
+            );
+          })}
         </nav>
       </div>
-    </header>
+    </motion.header>
   );
 }
 
@@ -29,18 +57,18 @@ export function Footer() {
       <div className="nav-inner">
         <div>
           <strong>DEVIL DON OFFICIAL</strong>
-          <span>🎮 DEVIL DON OFFICIAL — Rule The Battleground Like A Beast</span>
+          <span>DEVIL DON OFFICIAL - Rule The Battleground Like A Beast</span>
         </div>
         <div className="social-links footer-socials" aria-label="Customer social links">
           {socialLinks.map((social) => {
             const Icon = social.icon;
             return (
-              <a key={social.label} className="social-link light" href={social.href} target="_blank" rel="noreferrer">
+              <MotionExternalLink key={social.label} className="social-link light" href={social.href}>
                 <span className={`social-icon ${social.className}`}>
                   <Icon size={17} />
                 </span>
                 {social.label}
-              </a>
+              </MotionExternalLink>
             );
           })}
         </div>

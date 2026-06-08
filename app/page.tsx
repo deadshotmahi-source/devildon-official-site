@@ -1,6 +1,16 @@
-import Link from "next/link";
 import { BadgeCheck, Clock, DownloadCloud, Headphones, LockKeyhole, Zap } from "lucide-react";
 import { Footer, SiteNav } from "@/components/SiteNav";
+import {
+  FloatingPoster,
+  HeroBlock,
+  HeroItem,
+  MotionCard,
+  MotionExternalLink,
+  MotionLink,
+  MotionMain,
+  RevealSection,
+  StaggerGrid,
+} from "@/components/MotionPrimitives";
 import { featuredPlans } from "@/lib/plans";
 import { socialLinks } from "@/lib/socials";
 
@@ -13,93 +23,98 @@ const features = [
 
 export default function Home() {
   return (
-    <main className="shell">
+    <MotionMain className="shell">
       <SiteNav />
       <section className="hero">
+        <div className="neon-orbit" aria-hidden="true" />
         <div className="hero-inner">
-          <div>
-            <p className="eyebrow">Premium APK subscriptions</p>
-            <h1>DEVIL DON OFFICIAL</h1>
-            <p>
-              Secure access. Fast approval. Premium experience.
-            </p>
-            <div className="hero-actions">
-              <Link className="button" href="/buy">
+          <HeroBlock className="hero-copy">
+            <HeroItem>
+              <p className="eyebrow">Premium APK subscriptions</p>
+            </HeroItem>
+            <HeroItem>
+              <h1>DEVIL DON OFFICIAL</h1>
+            </HeroItem>
+            <HeroItem>
+              <p>Secure access. Fast approval. Premium experience.</p>
+            </HeroItem>
+            <HeroItem className="hero-actions">
+              <MotionLink className="button" href="/buy">
                 <Zap size={18} />
                 Buy Now
-              </Link>
-              <Link className="button secondary" href="/status">
+              </MotionLink>
+              <MotionLink className="button secondary" href="/status">
                 <BadgeCheck size={18} />
                 Check Status
-              </Link>
-            </div>
-            <div className="social-links hero-socials" aria-label="Customer social links">
+              </MotionLink>
+            </HeroItem>
+            <HeroItem className="social-links hero-socials" aria-label="Customer social links">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
                 return (
-                  <a key={social.label} className="social-link" href={social.href} target="_blank" rel="noreferrer">
+                  <MotionExternalLink key={social.label} className="social-link" href={social.href}>
                     <span className={`social-icon ${social.className}`}>
                       <Icon size={18} />
                     </span>
                     {social.label}
-                  </a>
+                  </MotionExternalLink>
                 );
               })}
-            </div>
-          </div>
-          <div className="hero-poster" aria-label="BGMI Devil Don poster">
+            </HeroItem>
+          </HeroBlock>
+          <FloatingPoster className="hero-poster glass-float" aria-label="BGMI Devil Don poster">
             <img src="/images/bgmi-devil-don-poster.png" alt="BGMI Devil Don team poster" />
-          </div>
+          </FloatingPoster>
         </div>
       </section>
 
-      <section className="section">
+      <RevealSection className="section">
         <div className="section-head">
           <div>
             <h2>Featured Plans</h2>
             <p className="muted">Simple entry plans with fast manual verification.</p>
           </div>
-          <Link className="button secondary" href="/buy">
+          <MotionLink className="button secondary" href="/buy">
             View All Plans
-          </Link>
+          </MotionLink>
         </div>
-        <div className="grid two">
+        <StaggerGrid className="grid two">
           {featuredPlans.map((plan) => (
-            <article className="card" key={plan.title}>
+            <MotionCard className="card premium-plan-card" key={plan.title}>
               <h3>{plan.title}</h3>
               <p className="muted">{plan.label}</p>
-              <div className="price">₹{plan.price}</div>
-              <Link className="button" href={plan.href}>
+              <div className="price">Rs {plan.price}</div>
+              <MotionLink className="button" href={plan.href}>
                 Buy Now
-              </Link>
-            </article>
+              </MotionLink>
+            </MotionCard>
           ))}
-        </div>
-      </section>
+        </StaggerGrid>
+      </RevealSection>
 
-      <section className="section">
+      <RevealSection className="section">
         <div className="section-head">
           <div>
             <h2>Why Customers Choose Us</h2>
             <p className="muted">Clean payment verification and controlled APK delivery.</p>
           </div>
         </div>
-        <div className="grid four">
+        <StaggerGrid className="grid four">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
-              <article className="card feature" key={feature.title}>
+              <MotionCard className="card feature glass-card" key={feature.title}>
                 <Icon size={24} />
                 <div>
                   <h3>{feature.title}</h3>
                   <p className="muted">{feature.text}</p>
                 </div>
-              </article>
+              </MotionCard>
             );
           })}
-        </div>
-      </section>
+        </StaggerGrid>
+      </RevealSection>
       <Footer />
-    </main>
+    </MotionMain>
   );
 }

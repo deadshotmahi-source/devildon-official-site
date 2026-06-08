@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
-import type { Transition, Variants } from "framer-motion";
+import type { HTMLMotionProps, Transition, Variants } from "framer-motion";
 
 const MotionNextLink = motion.create(Link);
 
@@ -40,9 +40,9 @@ export function HeroBlock({ children, className }: { children: ReactNode; classN
   );
 }
 
-export function HeroItem({ children, className }: { children: ReactNode; className?: string }) {
+export function HeroItem({ children, className, ...props }: { children: ReactNode; className?: string } & HTMLMotionProps<"div">) {
   return (
-    <motion.div className={className} variants={fadeUp} transition={smooth}>
+    <motion.div className={className} variants={fadeUp} transition={smooth} {...props}>
       {children}
     </motion.div>
   );
@@ -136,7 +136,7 @@ export function MotionExternalLink({
   );
 }
 
-export function FloatingPoster({ children, className }: { children: ReactNode; className?: string }) {
+export function FloatingPoster({ children, className, ...props }: { children: ReactNode; className?: string } & HTMLMotionProps<"div">) {
   return (
     <motion.div
       className={className}
@@ -144,6 +144,7 @@ export function FloatingPoster({ children, className }: { children: ReactNode; c
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ ...smooth, delay: 0.28 }}
       whileHover={{ y: -8, scale: 1.02 }}
+      {...props}
     >
       {children}
     </motion.div>
