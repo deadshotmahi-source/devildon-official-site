@@ -20,8 +20,7 @@ export default function Home() {
             <p className="eyebrow">Premium APK subscriptions</p>
             <h1>DEVIL DON OFFICIAL</h1>
             <p>
-              Buy BGMI APK plans with manual UPI verification, secure activation keys, and APK
-              download access after payment approval.
+              Secure access. Fast approval. Premium experience.
             </p>
             <div className="hero-actions">
               <Link className="button" href="/buy">
