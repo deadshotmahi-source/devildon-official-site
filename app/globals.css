@@ -23,7 +23,9 @@ html {
 body {
   margin: 0;
   color: var(--ink);
-  background: linear-gradient(180deg, #f5f9ff 0%, #ffffff 44%, #eef6ff 100%);
+  background:
+    linear-gradient(180deg, rgba(245, 249, 255, 0.94) 0%, rgba(255, 255, 255, 0.96) 42%, rgba(238, 246, 255, 0.94) 100%),
+    url("/images/bgmi-devil-don-poster.png") center top / cover fixed;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -47,8 +49,11 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 10;
-  border-bottom: 1px solid rgba(216, 228, 245, 0.8);
-  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  background:
+    linear-gradient(90deg, rgba(220, 38, 38, 0.18), transparent 28%),
+    rgba(3, 20, 48, 0.88);
+  box-shadow: 0 18px 40px rgba(2, 13, 31, 0.22);
   backdrop-filter: blur(18px);
 }
 
@@ -71,6 +76,7 @@ textarea {
   display: flex;
   align-items: center;
   gap: 10px;
+  color: white;
   font-weight: 900;
   letter-spacing: 0;
 }
@@ -82,8 +88,8 @@ textarea {
   place-items: center;
   color: white;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--navy), var(--blue));
-  box-shadow: 0 12px 24px rgba(23, 105, 232, 0.22);
+  background: linear-gradient(135deg, #ef4444, var(--blue));
+  box-shadow: 0 12px 24px rgba(239, 68, 68, 0.22);
 }
 
 .nav-links {
@@ -104,7 +110,15 @@ textarea {
 
 .nav-links a {
   padding: 10px 12px;
-  color: #1f3a5f;
+  color: #eff6ff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-links a:hover {
+  color: white;
+  border-color: rgba(239, 68, 68, 0.65);
+  background: rgba(239, 68, 68, 0.18);
 }
 
 .button {
@@ -146,6 +160,8 @@ textarea {
   overflow: hidden;
   color: white;
   background:
+    linear-gradient(90deg, rgba(6, 31, 72, 0.96), rgba(10, 60, 130, 0.82) 48%, rgba(6, 31, 72, 0.7)),
+    url("/images/bgmi-devil-don-poster.png") center / cover,
     radial-gradient(circle at 20% 10%, rgba(98, 168, 255, 0.38), transparent 28%),
     linear-gradient(135deg, #061f48 0%, #0b3c82 48%, #1769e8 100%);
 }
@@ -312,6 +328,42 @@ h1 {
   border-radius: 8px;
   background: var(--panel);
   box-shadow: 0 20px 44px rgba(10, 47, 105, 0.08);
+}
+
+.grid.two .card {
+  position: relative;
+  overflow: hidden;
+  color: white;
+  border-color: rgba(255, 255, 255, 0.16);
+  background:
+    linear-gradient(135deg, rgba(6, 31, 72, 0.95), rgba(10, 47, 105, 0.92) 58%, rgba(220, 38, 38, 0.82)),
+    url("/images/bgmi-devil-don-poster.png") center / cover;
+  box-shadow: 0 24px 54px rgba(2, 13, 31, 0.24);
+}
+
+.grid.two .card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-top: 4px solid #ef4444;
+  pointer-events: none;
+}
+
+.grid.two .card h3,
+.grid.two .card .muted,
+.grid.two .card .price {
+  position: relative;
+  color: white;
+}
+
+.grid.two .card .muted {
+  color: #dbeafe;
+}
+
+.grid.two .card .button {
+  position: relative;
+  background: #ef4444;
+  box-shadow: 0 16px 34px rgba(220, 38, 38, 0.24);
 }
 
 .card {
@@ -710,15 +762,28 @@ h1 {
 }
 
 .footer {
-  padding: 28px 0;
-  border-top: 1px solid var(--line);
-  color: #38516f;
-  background: white;
+  padding: 30px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  color: #dbeafe;
+  background:
+    linear-gradient(90deg, rgba(220, 38, 38, 0.22), transparent 32%),
+    linear-gradient(135deg, #061f48 0%, #0a2f69 58%, #031430 100%);
+  box-shadow: 0 -18px 44px rgba(2, 13, 31, 0.18);
 }
 
 .footer .nav-inner > div:first-child {
   display: grid;
   gap: 6px;
+}
+
+.footer strong {
+  color: white;
+}
+
+.footer .social-link.light {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 @media (max-width: 820px) {
@@ -753,9 +818,10 @@ h1 {
     display: inline-flex;
     justify-content: center;
     padding: 9px 6px;
-    border: 1px solid #d8e4f5;
+    color: #eff6ff;
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
-    background: #f8fbff;
+    background: rgba(255, 255, 255, 0.08);
     font-size: 12px;
   }
 
@@ -866,6 +932,10 @@ h1 {
   .how-to-buy {
     padding: 18px;
     box-shadow: 0 14px 30px rgba(10, 47, 105, 0.08);
+  }
+
+  .grid.two .card {
+    box-shadow: 0 18px 38px rgba(2, 13, 31, 0.2);
   }
 
   .card {

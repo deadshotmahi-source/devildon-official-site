@@ -29,7 +29,7 @@ export function Footer() {
       <div className="nav-inner">
         <div>
           <strong>DEVIL DON OFFICIAL</strong>
-          <span>Manual approval, secure keys, APK access after verification.</span>
+          <span>🎮 DEVIL DON OFFICIAL — Rule The Battleground Like A Beast</span>
         </div>
         <div className="social-links footer-socials" aria-label="Customer social links">
           {socialLinks.map((social) => {
