@@ -38,7 +38,9 @@ export default function Home() {
                 const Icon = social.icon;
                 return (
                   <a key={social.label} className="social-link" href={social.href} target="_blank" rel="noreferrer">
-                    <Icon size={18} />
+                    <span className={`social-icon ${social.className}`}>
+                      <Icon size={18} />
+                    </span>
                     {social.label}
                   </a>
                 );

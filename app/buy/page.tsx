@@ -35,7 +35,6 @@ function BuyContent() {
   const [form, setForm] = useState({ customerName: "", whatsappNumber: "", plan: selectedPlan });
   const [screenshot, setScreenshot] = useState<File | null>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState("");
-  const [upiId, setUpiId] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -50,7 +49,6 @@ function BuyContent() {
     getPaymentSettings()
       .then((settings) => {
         setQrCodeUrl(settings.qrCodeUrl ?? "");
-        setUpiId(settings.upiId ?? "");
       })
       .catch(() => undefined);
   }, []);
@@ -144,11 +142,6 @@ function BuyContent() {
           <aside className="form-card">
             <h2>UPI Payment</h2>
             <p className="muted">{planLabel}</p>
-            {upiId && (
-              <p>
-                <strong>UPI ID:</strong> {upiId}
-              </p>
-            )}
             <div className="qr-box">
               {qrCodeUrl ? (
                 <img src={qrCodeUrl} alt="UPI payment QR code" />

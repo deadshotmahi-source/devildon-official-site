@@ -36,7 +36,9 @@ export function Footer() {
             const Icon = social.icon;
             return (
               <a key={social.label} className="social-link light" href={social.href} target="_blank" rel="noreferrer">
-                <Icon size={17} />
+                <span className={`social-icon ${social.className}`}>
+                  <Icon size={17} />
+                </span>
                 {social.label}
               </a>
             );

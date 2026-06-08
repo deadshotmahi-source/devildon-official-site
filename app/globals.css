@@ -223,6 +223,27 @@ h1 {
   transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
 }
 
+.social-icon {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 28px;
+  border-radius: 8px;
+  color: white;
+}
+
+.social-icon.telegram {
+  background: #229ed9;
+  box-shadow: 0 8px 18px rgba(34, 158, 217, 0.28);
+}
+
+.social-icon.instagram {
+  background: radial-gradient(circle at 30% 105%, #feda75 0 18%, #fa7e1e 32%, #d62976 56%, #962fbf 76%, #4f5bd5 100%);
+  box-shadow: 0 8px 18px rgba(214, 41, 118, 0.28);
+}
+
 .social-link:hover {
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.18);
