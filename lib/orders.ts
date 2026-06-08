@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "./firebase";
+import { getApkDownloadLink } from "./plans";
 
 export type OrderStatus = "Pending" | "Approved" | "Rejected";
 
@@ -64,7 +65,7 @@ export async function createOrder(input: {
     paymentScreenshot,
     status: "Pending",
     activationKey: "",
-    apkDownloadLink: "",
+    apkDownloadLink: getApkDownloadLink(input.plan),
     createdTime: serverTimestamp(),
   });
 }

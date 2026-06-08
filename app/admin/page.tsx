@@ -14,7 +14,7 @@ import {
   saveUpiId,
   updateOrder,
 } from "@/lib/orders";
-import { getPlanLabel } from "@/lib/plans";
+import { getApkDownloadLink, getPlanLabel } from "@/lib/plans";
 
 const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? "change-this-password";
 
@@ -70,8 +70,13 @@ export default function AdminPage() {
   async function saveOrder(order: Order, updates: Partial<Order>) {
     setMessage("");
     try {
-      await updateOrder(order.id, updates);
-      setOrders((current) => current.map((item) => (item.id === order.id ? { ...item, ...updates } : item)));
+      const permanentApkLink = getApkDownloadLink(order.plan);
+      const nextUpdates = {
+        ...updates,
+        apkDownloadLink: permanentApkLink || updates.apkDownloadLink || order.apkDownloadLink,
+      };
+      await updateOrder(order.id, nextUpdates);
+      setOrders((current) => current.map((item) => (item.id === order.id ? { ...item, ...nextUpdates } : item)));
       setMessage("Order updated.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Could not update order.");
@@ -205,6 +210,7 @@ function OrderEditor({
   const statuses: OrderStatus[] = ["Pending", "Approved", "Rejected"];
 
   useEffect(() => setDraft(order), [order]);
+  const permanentApkLink = getApkDownloadLink(draft.plan) || draft.apkDownloadLink;
 
   return (
     <article className="order-card">
@@ -238,15 +244,15 @@ function OrderEditor({
         </div>
       </div>
       <div className="field">
-        <label>APK Download Link</label>
-        <input value={draft.apkDownloadLink} onChange={(event) => setDraft({ ...draft, apkDownloadLink: event.target.value })} />
+        <label>Permanent APK Download Link</label>
+        <input value={permanentApkLink} readOnly />
       </div>
       <div className="admin-actions">
-        <button className="button" type="button" onClick={() => onSave(order, draft)}>
+        <button className="button" type="button" onClick={() => onSave(order, { ...draft, apkDownloadLink: permanentApkLink })}>
           <KeyRound size={18} />
           Save
         </button>
-        <button className="button secondary" type="button" onClick={() => onSave(order, { status: "Approved" })}>
+        <button className="button secondary" type="button" onClick={() => onSave(order, { status: "Approved", apkDownloadLink: permanentApkLink })}>
           <Check size={18} />
           Approve
         </button>

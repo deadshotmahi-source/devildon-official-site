@@ -5,7 +5,7 @@ import { Download, Search } from "lucide-react";
 import { Footer, SiteNav } from "@/components/SiteNav";
 import { isFirebaseConfigured } from "@/lib/firebase";
 import { findOrdersByPhone, Order } from "@/lib/orders";
-import { getPlanLabel } from "@/lib/plans";
+import { getApkDownloadLink, getPlanLabel } from "@/lib/plans";
 
 export default function StatusPage() {
   const [phone, setPhone] = useState("");
@@ -57,8 +57,10 @@ export default function StatusPage() {
         </form>
 
         <div className="orders" style={{ marginTop: 22 }}>
-          {orders.map((order) => (
-            <article className="order-card" key={order.id}>
+          {orders.map((order) => {
+            const apkDownloadLink = order.apkDownloadLink || getApkDownloadLink(order.plan);
+            return (
+              <article className="order-card" key={order.id}>
               <div className="section-head">
                 <div>
                   <h2>{getPlanLabel(order.plan)}</h2>
@@ -70,14 +72,15 @@ export default function StatusPage() {
                 <strong>Activation Key:</strong>{" "}
                 {order.status === "Approved" && order.activationKey ? order.activationKey : "Available after approval"}
               </p>
-              {order.status === "Approved" && order.apkDownloadLink && (
-                <a className="button" href={order.apkDownloadLink} target="_blank" rel="noreferrer">
+              {order.status === "Approved" && apkDownloadLink && (
+                <a className="button" href={apkDownloadLink} target="_blank" rel="noreferrer">
                   <Download size={18} />
                   APK Download
                 </a>
               )}
             </article>
-          ))}
+            );
+          })}
         </div>
       </section>
       <Footer />
