@@ -6,7 +6,7 @@ export function SiteNav() {
   return (
     <header className="nav">
       <div className="nav-inner">
-        <Link className="brand" href="/">
+        <Link href="/" className="brand">
           <span className="brand-mark">
             <ShieldCheck size={21} />
           </span>
@@ -14,33 +14,33 @@ export function SiteNav() {
         </Link>
 
         <nav
-          className="flex items-center gap-3 flex-wrap"
           aria-label="Main navigation"
+          className="flex gap-3 flex-wrap"
         >
           <Link
             href="/"
-            className="rounded-xl border border-blue-200 bg-white px-4 py-2 font-bold shadow-sm"
+            className="rounded-lg border px-4 py-2 font-bold"
           >
             Home
           </Link>
 
           <Link
             href="/buy"
-            className="rounded-xl border border-blue-200 bg-white px-4 py-2 font-bold shadow-sm"
+            className="rounded-lg border px-4 py-2 font-bold"
           >
             Buy
           </Link>
 
           <Link
             href="/status"
-            className="rounded-xl border border-blue-200 bg-white px-4 py-2 font-bold shadow-sm"
+            className="rounded-lg border px-4 py-2 font-bold"
           >
             Status
           </Link>
 
           <Link
             href="/admin"
-            className="rounded-xl bg-blue-600 px-4 py-2 font-bold text-white"
+            className="rounded-lg bg-blue-600 px-4 py-2 font-bold text-white"
           >
             Admin
           </Link>
@@ -53,11 +53,11 @@ export function SiteNav() {
 export function Footer() {
   return (
     <footer className="footer">
-      <div className="nav-inner">
+      <div className="nav-inner flex justify-between items-center">
         <strong>DEVIL DON OFFICIAL</strong>
 
         <span className="font-bold text-blue-600">
-          🔥 Conquer the Battleground with Premium BGMI Access 🔥
+          🔥 Premium BGMI Access 🔥
         </span>
       </div>
     </footer>
