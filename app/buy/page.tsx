@@ -59,6 +59,7 @@ function BuyContent() {
       setStatus("Upload your payment screenshot before submitting.");
       return;
     }
+
     setLoading(true);
     setStatus("");
     try {
@@ -66,7 +67,7 @@ function BuyContent() {
       setStatus("Payment submitted. Check order status after admin verification.");
       setForm({ customerName: "", whatsappNumber: "", plan: selectedPlan });
       setScreenshot(null);
-      (event.currentTarget as HTMLFormElement)?.reset();
+      event.currentTarget.reset();
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Could not submit payment.");
     } finally {
@@ -159,62 +160,3 @@ function BuyContent() {
     </main>
   );
 }
-<div className="mt-8 rounded-2xl border border-blue-200 bg-blue-50 p-6 shadow-sm">
-  <h2 className="text-2xl font-black text-slate-900">
-    📖 How To Buy
-  </h2>
-
-  <p className="mt-2 text-slate-600">
-    Follow these simple steps to activate your premium BGMI access.
-  </p>
-
-  <div className="mt-5 grid gap-4">
-    
-    <div className="rounded-xl bg-white p-4 shadow-sm border border-blue-100">
-      <h3 className="font-bold text-blue-700">
-        1️⃣ Select Your Plan
-      </h3>
-      <p className="mt-1 text-slate-600">
-        Choose SAFE or BRUTAL plan according to your requirement.
-      </p>
-    </div>
-
-    <div className="rounded-xl bg-white p-4 shadow-sm border border-blue-100">
-      <h3 className="font-bold text-blue-700">
-        2️⃣ Make Payment
-      </h3>
-      <p className="mt-1 text-slate-600">
-        Scan the QR code and complete payment using UPI.
-      </p>
-    </div>
-
-    <div className="rounded-xl bg-white p-4 shadow-sm border border-blue-100">
-      <h3 className="font-bold text-blue-700">
-        3️⃣ Upload Screenshot
-      </h3>
-      <p className="mt-1 text-slate-600">
-        Upload your payment screenshot for admin verification.
-      </p>
-    </div>
-
-    <div className="rounded-xl bg-white p-4 shadow-sm border border-blue-100">
-      <h3 className="font-bold text-blue-700">
-        4️⃣ Get Approved
-      </h3>
-      <p className="mt-1 text-slate-600">
-        Admin verifies payment and activates your access key.
-      </p>
-    </div>
-
-    <div className="rounded-xl bg-white p-4 shadow-sm border border-blue-100">
-      <h3 className="font-bold text-blue-700">
-        5️⃣ Download APK
-      </h3>
-      <p className="mt-1 text-slate-600">
-        Visit Status page and download your APK after approval.
-      </p>
-    </div>
-
-  </div>
-</div>
-```
