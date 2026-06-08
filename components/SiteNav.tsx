@@ -1,4 +1,3 @@
-```tsx
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 
@@ -6,41 +5,17 @@ export function SiteNav() {
   return (
     <header className="nav">
       <div className="nav-inner">
-        <Link href="/" className="brand">
+        <Link className="brand" href="/">
           <span className="brand-mark">
             <ShieldCheck size={21} />
           </span>
           <span>DEVIL DON OFFICIAL</span>
         </Link>
-
-        <nav className="flex gap-3 flex-wrap">
-          <Link
-            href="/"
-            className="rounded-lg border border-blue-200 px-4 py-2 font-bold"
-          >
-            Home
-          </Link>
-
-          <Link
-            href="/buy"
-            className="rounded-lg border border-blue-200 px-4 py-2 font-bold"
-          >
-            Buy
-          </Link>
-
-          <Link
-            href="/status"
-            className="rounded-lg border border-blue-200 px-4 py-2 font-bold"
-          >
-            Status
-          </Link>
-
-          <Link
-            href="/admin"
-            className="rounded-lg bg-blue-600 px-4 py-2 font-bold text-white"
-          >
-            Admin
-          </Link>
+        <nav className="nav-links" aria-label="Main navigation">
+          <Link href="/">Home</Link>
+          <Link href="/buy">Buy</Link>
+          <Link href="/status">Status</Link>
+          <Link href="/admin">Admin</Link>
         </nav>
       </div>
     </header>
@@ -52,12 +27,8 @@ export function Footer() {
     <footer className="footer">
       <div className="nav-inner">
         <strong>DEVIL DON OFFICIAL</strong>
-
-        <span className="font-bold text-blue-600">
-          🔥 Premium BGMI Access 🔥
-        </span>
+        <span>Manual approval, secure keys, APK access after verification.</span>
       </div>
     </footer>
   );
 }
-```
