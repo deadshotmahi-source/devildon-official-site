@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { Check, KeyRound, RefreshCw, Trash2, UploadCloud, X } from "lucide-react";
+import { Check, KeyRound, RefreshCw, ShieldCheck, Trash2, UploadCloud, X } from "lucide-react";
 import { Footer, SiteNav } from "@/components/SiteNav";
 import { isFirebaseConfigured } from "@/lib/firebase";
 import {
@@ -23,6 +23,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [orders, setOrders] = useState<Order[]>([]);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<OrderStatus | "All">("All");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [qrFile, setQrFile] = useState<File | null>(null);
@@ -31,9 +32,22 @@ export default function AdminPage() {
 
   const filteredOrders = useMemo(() => {
     const term = search.trim().toLowerCase();
-    if (!term) return orders;
-    return orders.filter((order) => order.whatsappNumber.toLowerCase().includes(term));
-  }, [orders, search]);
+    return orders.filter((order) => {
+      const matchesPhone = !term || order.whatsappNumber.toLowerCase().includes(term);
+      const matchesStatus = statusFilter === "All" || order.status === statusFilter;
+      return matchesPhone && matchesStatus;
+    });
+  }, [orders, search, statusFilter]);
+
+  const orderStats = useMemo(
+    () => ({
+      all: orders.length,
+      pending: orders.filter((order) => order.status === "Pending").length,
+      approved: orders.filter((order) => order.status === "Approved").length,
+      rejected: orders.filter((order) => order.status === "Rejected").length,
+    }),
+    [orders]
+  );
 
   useEffect(() => {
     if (!loggedIn || !isFirebaseConfigured) return;
@@ -113,12 +127,22 @@ export default function AdminPage() {
     return (
       <main className="shell">
         <SiteNav />
-        <section className="section page-title">
-          <h1>Admin Login</h1>
-          <p className="muted">Password protected dashboard for payment approvals.</p>
+        <section className="admin-hero">
+          <div className="section admin-hero-inner">
+            <p className="admin-kicker">Secure control room</p>
+            <h1>Admin Login</h1>
+            <p>Password protected dashboard for payment approvals and activation delivery.</p>
+          </div>
         </section>
-        <section className="section">
-          <form className="form-card" onSubmit={handleLogin}>
+        <section className="section admin-surface">
+          <form className="form-card admin-login-card" onSubmit={handleLogin}>
+            <div className="admin-card-title">
+              <ShieldCheck size={24} />
+              <div>
+                <h2>Access Dashboard</h2>
+                <p className="muted">Enter admin password to continue.</p>
+              </div>
+            </div>
             <div className="field">
               <label htmlFor="password">Admin Password</label>
               <input
@@ -144,15 +168,42 @@ export default function AdminPage() {
   return (
     <main className="shell">
       <SiteNav />
-      <section className="section page-title">
-        <h1>Admin Dashboard</h1>
-        <p className="muted">Approve payments, add keys, manage APK links, and maintain payment QR.</p>
+      <section className="admin-hero">
+        <div className="section admin-hero-inner">
+          <p className="admin-kicker">DEVIL DON OFFICIAL</p>
+          <h1>Admin Dashboard</h1>
+          <p>Approve payments, add keys, control APK access, and manage customer orders.</p>
+        </div>
       </section>
-      <section className="section">
+      <section className="section admin-surface">
         {!isFirebaseConfigured && <p className="notice">Firebase env values are required before admin actions can work.</p>}
+        <div className="admin-stats">
+          <button className={`admin-stat ${statusFilter === "All" ? "active" : ""}`} type="button" onClick={() => setStatusFilter("All")}>
+            <span>Total Orders</span>
+            <strong>{orderStats.all}</strong>
+          </button>
+          <button className={`admin-stat pending ${statusFilter === "Pending" ? "active" : ""}`} type="button" onClick={() => setStatusFilter("Pending")}>
+            <span>Pending</span>
+            <strong>{orderStats.pending}</strong>
+          </button>
+          <button className={`admin-stat approved ${statusFilter === "Approved" ? "active" : ""}`} type="button" onClick={() => setStatusFilter("Approved")}>
+            <span>Approved</span>
+            <strong>{orderStats.approved}</strong>
+          </button>
+          <button className={`admin-stat rejected ${statusFilter === "Rejected" ? "active" : ""}`} type="button" onClick={() => setStatusFilter("Rejected")}>
+            <span>Rejected</span>
+            <strong>{orderStats.rejected}</strong>
+          </button>
+        </div>
         <div className="admin-row">
-          <form className="form-card" onSubmit={handleQrUpload}>
-            <h2>Payment Settings</h2>
+          <form className="form-card admin-panel" onSubmit={handleQrUpload}>
+            <div className="admin-card-title">
+              <UploadCloud size={22} />
+              <div>
+                <h2>Payment Settings</h2>
+                <p className="muted">Update QR and admin payment details.</p>
+              </div>
+            </div>
             <div className="field">
               <label htmlFor="upiId">UPI ID</label>
               <input id="upiId" value={upiId} onChange={(event) => setUpiId(event.target.value)} placeholder="yourupi@bank" />
@@ -171,12 +222,21 @@ export default function AdminPage() {
               </div>
             )}
           </form>
-          <div className="form-card">
-            <h2>Search</h2>
+          <div className="form-card admin-panel admin-search-panel">
+            <div className="admin-card-title">
+              <RefreshCw size={22} />
+              <div>
+                <h2>Search</h2>
+                <p className="muted">Find customer orders quickly.</p>
+              </div>
+            </div>
             <div className="field">
               <label htmlFor="search">Customer Phone Number</label>
               <input id="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search phone" />
             </div>
+            <p className="admin-filter-note">
+              Showing <strong>{filteredOrders.length}</strong> order{filteredOrders.length === 1 ? "" : "s"}.
+            </p>
             <button className="button secondary" type="button" onClick={refreshOrders} disabled={loading || !isFirebaseConfigured}>
               <RefreshCw size={18} />
               Refresh
@@ -185,7 +245,7 @@ export default function AdminPage() {
           </div>
         </div>
 
-        <div className="orders" style={{ marginTop: 22 }}>
+        <div className="orders admin-orders">
           {filteredOrders.map((order) => (
             <OrderEditor key={order.id} order={order} onSave={saveOrder} onDelete={removeOrder} />
           ))}
@@ -213,7 +273,7 @@ function OrderEditor({
   const permanentApkLink = getApkDownloadLink(draft.plan) || draft.apkDownloadLink;
 
   return (
-    <article className="order-card">
+    <article className="order-card admin-order-card">
       <div className="section-head">
         <div>
           <h2>{draft.customerName}</h2>
@@ -221,14 +281,14 @@ function OrderEditor({
         </div>
         <span className={`status-pill status-${draft.status}`}>{draft.status}</span>
       </div>
-      <p>
-        <strong>Plan:</strong> {getPlanLabel(draft.plan)}
-      </p>
-      <p>
+      <div className="admin-order-meta">
+        <span>
+          <strong>Plan:</strong> {getPlanLabel(draft.plan)}
+        </span>
         <a className="screenshot-link" href={draft.paymentScreenshot} target="_blank" rel="noreferrer">
           View payment screenshot
         </a>
-      </p>
+      </div>
       <div className="grid two">
         <div className="field">
           <label>Status</label>
@@ -256,7 +316,7 @@ function OrderEditor({
           <Check size={18} />
           Approve
         </button>
-        <button className="button secondary" type="button" onClick={() => onSave(order, { status: "Rejected" })}>
+        <button className="button reject" type="button" onClick={() => onSave(order, { status: "Rejected" })}>
           <X size={18} />
           Reject
         </button>
