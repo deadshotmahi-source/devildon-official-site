@@ -2,11 +2,19 @@
 
 import { FormEvent, Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { CheckCircle2, UploadCloud } from "lucide-react";
+import { CheckCircle2, CreditCard, Download, ListChecks, ShieldCheck, UploadCloud } from "lucide-react";
 import { Footer, SiteNav } from "@/components/SiteNav";
 import { isFirebaseConfigured } from "@/lib/firebase";
 import { createOrder, getPaymentSettings } from "@/lib/orders";
 import { getPlanLabel, plans } from "@/lib/plans";
+
+const buySteps = [
+  { title: "Select Plan", text: "Choose SAFE or BRUTAL plan from the form.", icon: ListChecks },
+  { title: "Pay", text: "Scan the QR code and complete payment.", icon: CreditCard },
+  { title: "Upload Screenshot", text: "Upload your payment screenshot for checking.", icon: UploadCloud },
+  { title: "Wait Approval", text: "Admin verifies payment and adds your activation key.", icon: ShieldCheck },
+  { title: "Download APK", text: "Check status and download APK after approval.", icon: Download },
+];
 
 export default function BuyPage() {
   return (
@@ -154,6 +162,29 @@ function BuyContent() {
               <CheckCircle2 size={16} /> Complete payment and upload screenshot for verification.
             </p>
           </aside>
+        </div>
+        <div className="how-to-buy">
+          <div className="section-head">
+            <div>
+              <h2>How To Buy</h2>
+              <p className="muted">Follow these steps to get your APK access after payment approval.</p>
+            </div>
+          </div>
+          <div className="buy-steps">
+            {buySteps.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <article className="buy-step" key={step.title}>
+                  <span className="step-number">{index + 1}</span>
+                  <Icon size={22} />
+                  <div>
+                    <h3>{step.title}</h3>
+                    <p className="muted">{step.text}</p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </div>
       </section>
       <Footer />
