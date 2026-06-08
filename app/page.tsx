@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BadgeCheck, Clock, DownloadCloud, Headphones, LockKeyhole, ShieldCheck, Zap } from "lucide-react";
+import { BadgeCheck, Clock, DownloadCloud, Headphones, LockKeyhole, Zap } from "lucide-react";
 import { Footer, SiteNav } from "@/components/SiteNav";
 import { featuredPlans } from "@/lib/plans";
 
@@ -33,27 +33,8 @@ export default function Home() {
               </Link>
             </div>
           </div>
-          <div className="device" aria-hidden="true">
-            <div className="screen">
-              <div className="screen-top">
-                <strong>Approval Console</strong>
-                <span className="pulse" />
-              </div>
-              <div className="mini-stats">
-                <div className="mini-stat">
-                  <span>Payment Status</span>
-                  <strong>Pending</strong>
-                </div>
-                <div className="mini-stat">
-                  <span>Activation Key</span>
-                  <ShieldCheck size={22} />
-                </div>
-                <div className="mini-stat">
-                  <span>APK Access</span>
-                  <strong>After Approval</strong>
-                </div>
-              </div>
-            </div>
+          <div className="hero-poster" aria-label="BGMI Devil Don poster">
+            <img src="/images/bgmi-devil-don-poster.png" alt="BGMI Devil Don team poster" />
           </div>
         </div>
       </section>
