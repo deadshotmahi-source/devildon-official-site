@@ -159,7 +159,6 @@ function BuyContent() {
     </main>
   );
 }
-```tsx
 <div className="mt-8 rounded-2xl border border-blue-200 bg-blue-50 p-6 shadow-sm">
   <h2 className="text-2xl font-black text-slate-900">
     📖 How To Buy
