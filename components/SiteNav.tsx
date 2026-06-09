@@ -45,11 +45,6 @@ export function SiteNav() {
               </motion.div>
             );
           })}
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>
-            <a className="vip-key-link" href="https://ragekey.shop/" target="_blank" rel="noreferrer">
-              <span>VIP KEY GENERATOR</span>
-            </a>
-          </motion.div>
         </nav>
       </div>
     </motion.header>

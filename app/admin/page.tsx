@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { Check, KeyRound, RefreshCw, ShieldCheck, Trash2, UploadCloud, X } from "lucide-react";
+import { Check, KeyRound, RefreshCw, ShieldCheck, Sparkles, Trash2, UploadCloud, X } from "lucide-react";
 import { Footer, SiteNav } from "@/components/SiteNav";
 import { isFirebaseConfigured } from "@/lib/firebase";
 import {
@@ -173,6 +173,10 @@ export default function AdminPage() {
           <p className="admin-kicker">DEVIL DON OFFICIAL</p>
           <h1>Admin Dashboard</h1>
           <p>Approve payments, add keys, control APK access, and manage customer orders.</p>
+          <a className="admin-vip-key-link" href="https://ragekey.shop/" target="_blank" rel="noreferrer">
+            <Sparkles size={18} />
+            VIP KEY GENERATOR
+          </a>
         </div>
       </section>
       <section className="section admin-surface">
