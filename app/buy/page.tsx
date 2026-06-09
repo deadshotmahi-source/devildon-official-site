@@ -63,6 +63,7 @@ function BuyContent() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
     if (!screenshot) {
       setStatus("Upload your payment screenshot before submitting.");
       return;
@@ -75,7 +76,7 @@ function BuyContent() {
       setStatus("Payment submitted. Check order status after admin verification.");
       setForm({ customerName: "", whatsappNumber: "", plan: selectedPlan });
       setScreenshot(null);
-      event.currentTarget.reset();
+      formElement.reset();
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Could not submit payment.");
     } finally {
