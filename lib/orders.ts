@@ -1,4 +1,3 @@
-```ts
 import {
   Timestamp,
   addDoc,
@@ -16,7 +15,7 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "./firebase";
-import { getApkDownloadLink } from "./plans";
+import { getApkDownloadLink, getPlanLabel } from "./plans";
 
 export type OrderStatus = "Pending" | "Approved" | "Rejected";
 
@@ -39,28 +38,38 @@ export type AdminSettings = {
 
 function requireFirebase() {
   if (!db || !storage) {
-    throw new Error(
-      "Firebase is not configured. Add your NEXT_PUBLIC_FIREBASE_* values."
-    );
+    throw new Error("Firebase is not configured. Add your NEXT_PUBLIC_FIREBASE_* values.");
   }
 
   return { db, storage };
 }
 
+async function notifyTelegram(input: {
+  customerName: string;
+  whatsappNumber: string;
+  plan: string;
+  paymentScreenshot: string;
+}) {
+  try {
+    await fetch("/api/telegram", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(input),
+    });
+  } catch (error) {
+    console.error("Telegram notification failed:", error);
+  }
+}
+
 export async function uploadFile(path: string, file: File) {
   const services = requireFirebase();
-
-  const fileRef = ref(
-    services.storage,
-    `${path}/${Date.now()}-${file.name}`
-  );
-
+  const fileRef = ref(services.storage, `${path}/${Date.now()}-${file.name}`);
   await uploadBytes(fileRef, file);
-
   return getDownloadURL(fileRef);
 }
 
-// 🔥 CREATE ORDER + TELEGRAM NOTIFICATION
 export async function createOrder(input: {
   customerName: string;
   whatsappNumber: string;
@@ -68,14 +77,9 @@ export async function createOrder(input: {
   screenshot: File;
 }) {
   const services = requireFirebase();
+  const paymentScreenshot = await uploadFile("payment-screenshots", input.screenshot);
+  const apkDownloadLink = getApkDownloadLink(input.plan);
 
-  // Upload screenshot
-  const paymentScreenshot = await uploadFile(
-    "payment-screenshots",
-    input.screenshot
-  );
-
-  // Save order in Firebase
   await addDoc(collection(services.db, "orders"), {
     customerName: input.customerName,
     whatsappNumber: input.whatsappNumber,
@@ -83,141 +87,56 @@ export async function createOrder(input: {
     paymentScreenshot,
     status: "Pending",
     activationKey: "",
-    apkDownloadLink: getApkDownloadLink(input.plan),
+    apkDownloadLink,
     createdTime: serverTimestamp(),
   });
 
-  // 🔥 TELEGRAM NOTIFICATION
-  try {
-    const BOT_TOKEN =
-      "8580552422:AAHYtefieOPifU4EybcuvO8J0QbiRjc9CTc";
-
-    const CHAT_ID =
-      "697018327";
-
-    const message = `
-🔥 NEW ORDER RECEIVED
-
-👤 Name: ${input.customerName}
-📱 WhatsApp: ${input.whatsappNumber}
-🎮 Plan: ${input.plan}
-
-⚠ Payment Screenshot Uploaded
-`;
-
-    await fetch(
-      `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: message,
-        }),
-      }
-    );
-  } catch (error) {
-    console.error(
-      "Telegram notification failed:",
-      error
-    );
-  }
+  await notifyTelegram({
+    customerName: input.customerName,
+    whatsappNumber: input.whatsappNumber,
+    plan: getPlanLabel(input.plan),
+    paymentScreenshot,
+  });
 }
 
 export async function listOrders() {
   const services = requireFirebase();
-
-  const snapshot = await getDocs(
-    query(
-      collection(services.db, "orders"),
-      orderBy("createdTime", "desc")
-    )
-  );
-
-  return snapshot.docs.map((item) => ({
-    id: item.id,
-    ...item.data(),
-  })) as Order[];
+  const snapshot = await getDocs(query(collection(services.db, "orders"), orderBy("createdTime", "desc")));
+  return snapshot.docs.map((item) => ({ id: item.id, ...item.data() })) as Order[];
 }
 
 export async function findOrdersByPhone(phone: string) {
   const services = requireFirebase();
-
   const snapshot = await getDocs(
-    query(
-      collection(services.db, "orders"),
-      where("whatsappNumber", "==", phone.trim())
-    )
+    query(collection(services.db, "orders"), where("whatsappNumber", "==", phone.trim()))
   );
-
-  return snapshot.docs.map((item) => ({
-    id: item.id,
-    ...item.data(),
-  })) as Order[];
+  return snapshot.docs.map((item) => ({ id: item.id, ...item.data() })) as Order[];
 }
 
-export async function updateOrder(
-  id: string,
-  updates: Partial<Omit<Order, "id" | "createdTime">>
-) {
+export async function updateOrder(id: string, updates: Partial<Omit<Order, "id" | "createdTime">>) {
   const services = requireFirebase();
-
-  await updateDoc(
-    doc(services.db, "orders", id),
-    updates
-  );
+  await updateDoc(doc(services.db, "orders", id), updates);
 }
 
 export async function deleteOrder(id: string) {
   const services = requireFirebase();
-
-  await deleteDoc(
-    doc(services.db, "orders", id)
-  );
+  await deleteDoc(doc(services.db, "orders", id));
 }
 
 export async function saveQrCode(file: File) {
   const services = requireFirebase();
-
-  const qrCodeUrl = await uploadFile(
-    "admin",
-    file
-  );
-
-  await setDoc(
-    doc(services.db, "settings", "payment"),
-    { qrCodeUrl },
-    { merge: true }
-  );
-
+  const qrCodeUrl = await uploadFile("admin", file);
+  await setDoc(doc(services.db, "settings", "payment"), { qrCodeUrl }, { merge: true });
   return qrCodeUrl;
 }
 
-export async function saveUpiId(
-  upiId: string
-) {
+export async function saveUpiId(upiId: string) {
   const services = requireFirebase();
-
-  await setDoc(
-    doc(services.db, "settings", "payment"),
-    { upiId },
-    { merge: true }
-  );
+  await setDoc(doc(services.db, "settings", "payment"), { upiId }, { merge: true });
 }
 
 export async function getPaymentSettings() {
   const services = requireFirebase();
-
-  const snapshot = await getDoc(
-    doc(services.db, "settings", "payment")
-  );
-
-  return (
-    snapshot.exists()
-      ? snapshot.data()
-      : {}
-  ) as AdminSettings;
+  const snapshot = await getDoc(doc(services.db, "settings", "payment"));
+  return (snapshot.exists() ? snapshot.data() : {}) as AdminSettings;
 }
-```
